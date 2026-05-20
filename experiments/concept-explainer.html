@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web3 × AI 概念解释器</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --border: #1e1e2e;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --success: #10b981;
+    --danger: #ef4444;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+  .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 40px 0 20px;
+  }
+  header h1 {
+    font-size: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  header p { color: var(--muted); font-size: 14px; }
+
+  /* API Key */
+  .api-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+  .api-section label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+  .api-row { display: flex; gap: 10px; align-items: center; }
+  .api-row input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; color: var(--text);
+    font-size: 14px; outline: none;
+  }
+  .api-row input:focus { border-color: var(--accent); }
+  .api-status { font-size: 12px; margin-top: 8px; }
+  .api-status.ok { color: var(--success); }
+  .api-status.no { color: var(--muted); }
+
+  /* Concept Selector */
+  .concept-grid {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .concept-chip {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px; font-size: 13px;
+    cursor: pointer; transition: all 0.2s;
+    user-select: none;
+  }
+  .concept-chip:hover { border-color: var(--accent); color: #fff; }
+  .concept-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .custom-row {
+    display: flex; gap: 10px; margin-bottom: 24px;
+  }
+  .custom-row input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; color: var(--text);
+    font-size: 14px; outline: none;
+  }
+  .custom-row input:focus { border-color: var(--accent); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #9333ea);
+    border: none; border-radius: 8px; padding: 10px 24px;
+    color: #fff; font-size: 14px; cursor: pointer;
+    font-weight: 600; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .card h2 {
+    font-size: 16px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card h2 .icon { font-size: 20px; }
+
+  .section { margin-bottom: 14px; }
+  .section-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 6px; letter-spacing: 0.5px;
+  }
+  .section-body { font-size: 14px; color: #cbd5e1; }
+
+  /* Quiz */
+  .quiz-question { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; font-size: 14px;
+    cursor: pointer; transition: all 0.2s; text-align: left;
+    color: var(--text);
+  }
+  .quiz-opt:hover { border-color: var(--accent); }
+  .quiz-opt.correct { border-color: var(--success); background: rgba(16,185,129,0.1); }
+  .quiz-opt.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); }
+  .quiz-opt.disabled { pointer-events: none; opacity: 0.7; }
+  .quiz-feedback { margin-top: 10px; font-size: 13px; padding: 10px; border-radius: 8px; }
+  .quiz-feedback.ok { background: rgba(16,185,129,0.1); color: var(--success); }
+  .quiz-feedback.no { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+  /* Chat */
+  .chat-box {
+    max-height: 300px; overflow-y: auto; margin-bottom: 12px;
+  }
+  .chat-msg {
+    margin-bottom: 10px; font-size: 14px; padding: 10px 14px;
+    border-radius: 8px; max-width: 90%;
+  }
+  .chat-msg.user { background: rgba(124,58,237,0.15); margin-left: auto; text-align: right; }
+  .chat-msg.ai { background: var(--bg); border: 1px solid var(--border); }
+  .chat-input-row { display: flex; gap: 10px; }
+  .chat-input-row input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; color: var(--text); outline: none;
+  }
+  .chat-input-row input:focus { border-color: var(--accent); }
+  .btn-small {
+    background: var(--accent); border: none; border-radius: 8px;
+    padding: 10px 16px; color: #fff; cursor: pointer; font-size: 13px;
+  }
+
+  /* Attribution */
+  .attribution {
+    margin-top: 30px; padding: 16px 20px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; font-size: 13px; color: var(--muted);
+  }
+  .attribution h3 { font-size: 14px; color: var(--text); margin-bottom: 10px; }
+  .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .attr-item { display: flex; gap: 6px; align-items: center; }
+  .attr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .attr-dot.ai { background: var(--accent); }
+  .attr-dot.human { background: var(--success); }
+
+  /* Loading */
+  .loading { display: flex; gap: 4px; padding: 8px 0; }
+  .loading span {
+    width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .loading span:nth-child(2) { animation-delay: 0.2s; }
+  .loading span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:scale(0)} 40%{transform:scale(1)} }
+
+  .hidden { display: none; }
+
+  /* Score */
+  .score-bar {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+    font-size: 13px; color: var(--muted);
+  }
+  .score-bar strong { color: var(--success); font-size: 18px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>🧠 Web3 × AI 概念解释器</h1>
+    <p>输入一个概念，AI 帮你拆解定义、类比、例子和常见误区，再考考你</p>
+  </header>
+
+  <!-- API Key -->
+  <div class="api-section">
+    <label>🔑 输入你的 GLM API Key（智谱 BigModel）</label>
+    <div class="api-row">
+      <input type="password" id="apiKey" placeholder="粘贴你的 API Key..." />
+      <button class="btn-small" onclick="saveKey()">保存</button>
+    </div>
+    <div class="api-status no" id="apiStatus">⚠️ 未配置 Key，AI 功能不可用</div>
+  </div>
+
+  <!-- Concept Chips -->
+  <div class="concept-grid" id="conceptGrid"></div>
+
+  <!-- Custom Input -->
+  <div class="custom-row">
+    <input type="text" id="customConcept" placeholder="或输入任意概念，如：MEV、ZK-Rollup、RAG..." />
+    <button class="btn-primary" id="explainBtn" onclick="explain()">解释概念</button>
+  </div>
+
+  <!-- Result Cards -->
+  <div id="resultArea"></div>
+
+  <!-- Attribution -->
+  <div class="attribution">
+    <h3>🏷️ AI 辅助说明</h3>
+    <div class="attr-grid">
+      <div class="attr-item"><span class="attr-dot ai"></span> 概念解释内容：AI 生成</div>
+      <div class="attr-item"><span class="attr-dot human"></span> Prompt 结构设计：人工编写</div>
+      <div class="attr-item"><span class="attr-dot ai"></span> 测验题目生成：AI 生成</div>
+      <div class="attr-item"><span class="attr-dot human"></span> 概念列表筛选：人工策划</div>
+      <div class="attr-item"><span class="attr-dot ai"></span> 追问对话回答：AI 生成</div>
+      <div class="attr-item"><span class="attr-dot human"></span> 输出验证与改写：人工复核</div>
+    </div>
+    <p style="margin-top:10px;">💡 <strong>使用建议</strong>：AI 生成的解释是起点而非终点——用追问深挖，用自己的话改写，才能把概念真正变成自己的。</p>
+  </div>
+
+</div>
+
+<script>
+// ========== Config ==========
+const CONCEPTS = [
+  'LLM', 'Prompt', 'Context Window', 'Agent',
+  'Tool Use', 'Workflow', 'Guardrails', 'Human-in-the-loop',
+  'Smart Contract', 'DeFi', 'DAO', 'Gas',
+  'Wallet', 'Consensus', 'Bridge', 'RAG',
+  'ZK Proof', 'MEV', 'Tokenomics', 'AI Oracle'
+];
+
+const API_URL = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
+const MODEL = 'glm-4-flash';
+
+let currentConcept = '';
+let quizAnswer = '';
+let quizContext = '';
+let score = 0;
+let total = 0;
+
+// ========== Init ==========
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('glm_api_key');
+  if (saved) {
+    document.getElementById('apiKey').value = saved;
+    document.getElementById('apiStatus').className = 'api-status ok';
+    document.getElementById('apiStatus').textContent = '✅ Key 已保存，AI 功能就绪';
+  }
+  renderChips();
+});
+
+function renderChips() {
+  const grid = document.getElementById('conceptGrid');
+  grid.innerHTML = CONCEPTS.map(c =>
+    `<span class="concept-chip" onclick="selectChip(this,'${c}')">${c}</span>`
+  ).join('');
+}
+
+function selectChip(el, concept) {
+  document.querySelectorAll('.concept-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('customConcept').value = concept;
+}
+
+function saveKey() {
+  const key = document.getElementById('apiKey').value.trim();
+  if (key) {
+    localStorage.setItem('glm_api_key', key);
+    document.getElementById('apiStatus').className = 'api-status ok';
+    document.getElementById('apiStatus').textContent = '✅ Key 已保存，AI 功能就绪';
+  }
+}
+
+function getKey() {
+  return localStorage.getItem('glm_api_key') || document.getElementById('apiKey').value.trim();
+}
+
+// ========== API Call ==========
+async function callGLM(messages) {
+  const key = getKey();
+  if (!key) {
+    alert('请先输入 API Key');
+    return null;
+  }
+
+  try {
+    const resp = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 1500
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error(`API error ${resp.status}: ${err}`);
+    }
+
+    const data = await resp.json();
+    return data.choices[0].message.content;
+  } catch (e) {
+    console.error(e);
+    return `❌ API 调用失败：${e.message}`;
+  }
+}
+
+// ========== Explain ==========
+async function explain() {
+  const concept = document.getElementById('customConcept').value.trim();
+  if (!concept) { alert('请输入或选择一个概念'); return; }
+
+  currentConcept = concept;
+  const area = document.getElementById('resultArea');
+  const btn = document.getElementById('explainBtn');
+  btn.disabled = true;
+  btn.textContent = '生成中...';
+
+  area.innerHTML = `
+    <div class="card">
+      <div class="loading"><span></span><span></span><span></span></div>
+      <p style="color:var(--muted);font-size:14px;">正在让 AI 解释「${concept}」...</p>
+    </div>
+  `;
+
+  const systemPrompt = `你是一个 Web3 × AI 领域的概念教学助手。用户给你一个概念，你要用以下结构输出，每部分简洁有力：
+
+【定义】一句话说清这个概念是什么。
+【类比】用一个日常生活的比喻帮助理解。
+【Web3场景】给出一个具体的 Web3/AI 应用场景中的真实例子。
+【常见误区】指出学习者最容易犯的错误或误解。
+【一句话记忆】用 10 个字以内帮人记住核心要点。
+
+规则：
+- 用中文回答
+- 不要啰嗦，每部分 2-3 句话
+- 例子要具体，不要泛泛而谈
+- 误区要说清楚"为什么错"而不仅是"这是错的"`;
+
+  const userMsg = `请解释概念：${concept}`;
+
+  const result = await callGLM([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userMsg }
+  ]);
+
+  if (!result) {
+    area.innerHTML = '<div class="card"><p>❌ 生成失败，请检查 API Key</p></div>';
+    btn.disabled = false;
+    btn.textContent = '解释概念';
+    return;
+  }
+
+  // Parse sections
+  const sections = parseSections(result);
+
+  area.innerHTML = `
+    <div class="card">
+      <h2><span class="icon">📖</span> ${concept} — 概念解释</h2>
+      ${sections.map(s => `
+        <div class="section">
+          <div class="section-title">${s.title}</div>
+          <div class="section-body">${s.body}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="card" id="quizCard">
+      <h2><span class="icon">🎯</span> 随堂小测</h2>
+      <div class="score-bar">得分：<strong id="scoreVal">${score}</strong> / ${total} 题</div>
+      <div class="loading"><span></span><span></span><span></span></div>
+    </div>
+    <div class="card">
+      <h2><span class="icon">💬</span> 继续追问</h2>
+      <div class="chat-box" id="chatBox"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="还想了解什么？追问、举反例、要更多例子..." onkeydown="if(event.key==='Enter')chatAsk()" />
+        <button class="btn-small" onclick="chatAsk()">提问</button>
+      </div>
+    </div>
+  `;
+
+  btn.disabled = false;
+  btn.textContent = '解释概念';
+
+  // Generate quiz
+  generateQuiz(concept);
+}
+
+function parseSections(text) {
+  const map = {
+    '定义': '💡 定义',
+    '类比': '🔗 类比',
+    'Web3场景': '🌐 Web3 场景',
+    '常见误区': '⚠️ 常见误区',
+    '一句话记忆': '📌 一句话记忆'
+  };
+  const results = [];
+  const lines = text.split('\n');
+  let current = null;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    const match = trimmed.match(/^【(.+?)】(.*)/);
+    if (match) {
+      if (current) results.push(current);
+      const key = match[1];
+      current = { title: map[key] || key, body: match[2].trim() };
+    } else if (current && trimmed) {
+      current.body += ' ' + trimmed;
+    }
+  }
+  if (current) results.push(current);
+  if (results.length === 0) {
+    results.push({ title: '📝 AI 输出', body: text });
+  }
+  return results;
+}
+
+// ========== Quiz ==========
+async function generateQuiz(concept) {
+  const quizCard = document.getElementById('quizCard');
+  if (!quizCard) return;
+
+  const systemPrompt = `你是一个出题助手。给定一个概念，出一道四选一的单选题，考察学习者是否真正理解了这个概念（不是考记忆，而是考理解）。
+
+严格按以下 JSON 格式输出，不要输出任何其他内容：
+{
+  "question": "题目文本",
+  "options": ["A. 选项1", "B. 选项2", "C. 选项3", "D. 选项4"],
+  "answer": "A",
+  "explanation": "正确答案的解释，为什么对，其他为什么错"
+}`;
+
+  const result = await callGLM([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: `请为概念「${concept}」出题` }
+  ]);
+
+  if (!result) {
+    quizCard.innerHTML = '<p>❌ 出题失败</p>';
+    return;
+  }
+
+  try {
+    // Try to extract JSON from the response
+    const jsonMatch = result.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('No JSON');
+    const quiz = JSON.parse(jsonMatch[0]);
+    quizAnswer = quiz.answer;
+    quizContext = quiz.explanation;
+
+    const scoreEl = document.getElementById('scoreVal');
+    if (scoreEl) scoreEl.textContent = `${score}/${total}`;
+
+    quizCard.innerHTML = `
+      <h2><span class="icon">🎯</span> 随堂小测</h2>
+      <div class="score-bar">得分：<strong id="scoreVal">${score}</strong> / ${total} 题</div>
+      <div class="quiz-question">${quiz.question}</div>
+      <div class="quiz-options">
+        ${quiz.options.map((opt, i) => `
+          <button class="quiz-opt" onclick="answerQuiz(this, '${String.fromCharCode(65+i)}')">${opt}</button>
+        `).join('')}
+      </div>
+      <div id="quizFeedback"></div>
+    `;
+  } catch(e) {
+    quizCard.innerHTML = `
+      <h2><span class="icon">🎯</span> 随堂小测</h2>
+      <p style="color:var(--muted)">出题解析失败，原始输出：</p>
+      <pre style="font-size:13px;color:var(--muted);white-space:pre-wrap;">${result}</pre>
+    `;
+  }
+}
+
+function answerQuiz(el, chosen) {
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  total++;
+  const feedback = document.getElementById('quizFeedback');
+  const correct = chosen === quizAnswer;
+
+  // Highlight correct and wrong
+  opts.forEach(o => {
+    const optLetter = o.textContent.trim()[0];
+    if (optLetter === quizAnswer) o.classList.add('correct');
+    if (optLetter === chosen && !correct) o.classList.add('wrong');
+  });
+
+  if (correct) {
+    score++;
+    feedback.innerHTML = `<div class="quiz-feedback ok">✅ 正确！${quizContext}</div>`;
+  } else {
+    feedback.innerHTML = `<div class="quiz-feedback no">❌ 正确答案是 ${quizAnswer}。${quizContext}</div>`;
+  }
+
+  const scoreEl = document.getElementById('scoreVal');
+  if (scoreEl) scoreEl.textContent = `${score}/${total}`;
+
+  // Add "next quiz" button
+  feedback.innerHTML += `<button class="btn-small" style="margin-top:10px;" onclick="generateQuiz('${currentConcept}')">再来一题 →</button>`;
+}
+
+// ========== Chat ==========
+let chatHistory = [];
+
+async function chatAsk() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const box = document.getElementById('chatBox');
+  box.innerHTML += `<div class="chat-msg user">${escapeHtml(msg)}</div>`;
+  box.innerHTML += `<div class="chat-msg ai" id="chatLoading"><div class="loading"><span></span><span></span><span></span></div></div>`;
+  box.scrollTop = box.scrollHeight;
+
+  chatHistory.push({ role: 'user', content: msg });
+
+  const systemPrompt = `你是一个关于「${currentConcept}」概念的教学助手。用户会追问相关问题。
+规则：
+- 用中文回答
+- 简洁，2-5 句话
+- 如果用户问的不在概念范围内，温和地引导回来
+- 可以举反例来加深理解`;
+
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...chatHistory.slice(-6) // Keep last 6 messages for context
+  ];
+
+  const result = await callGLM(messages);
+
+  const loading = document.getElementById('chatLoading');
+  if (loading) loading.remove();
+
+  if (result) {
+    chatHistory.push({ role: 'assistant', content: result });
+    box.innerHTML += `<div class="chat-msg ai">${escapeHtml(result)}</div>`;
+  } else {
+    box.innerHTML += `<div class="chat-msg ai" style="color:var(--danger)">❌ 回答失败</div>`;
+  }
+  box.scrollTop = box.scrollHeight;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+</script>
+</body>
+</html>

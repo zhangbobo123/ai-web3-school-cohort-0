@@ -16,29 +16,38 @@
 - 1h：实践 / 实验 / 产品分析
 - 1h：笔记整理 + 打卡
 
+## 学习进度总览
+
+| 阶段 | 状态 | 完成度 |
+|------|------|--------|
+| Phase 1：基础回顾 | 🟡 进行中 | AI ✅ / Web3 部分完成 |
+| Phase 2：Bridge 核心 | 🟡 进行中 | 3/15 已完成 |
+| Phase 3：前沿赛道 | ⬜ 未开始 | 0/6 |
+| Phase 4：Hackathon | ⬜ 未开始 | — |
+
 ## Handbook 章节路线（产品研究方向）
 
-### Phase 1：基础回顾（Week 1）
+### Phase 1：基础回顾（Week 1）🟡
 
 目标：快速扫过已掌握内容，聚焦薄弱点，为 Bridge 层打基础。
 
-**AI 基础（选读薄弱章节）**
-- [ ] [LLM](https://aiweb3.school/zh/handbook/ai/llm/)
-- [ ] [Prompt](https://aiweb3.school/zh/handbook/ai/prompt/)
-- [ ] [Context](https://aiweb3.school/zh/handbook/ai/context/)
-- [ ] [RAG](https://aiweb3.school/zh/handbook/ai/rag/)
-- [ ] [Agent](https://aiweb3.school/zh/handbook/ai/agent/)
-- [ ] [Frameworks](https://aiweb3.school/zh/handbook/ai/frameworks/)
-- [ ] [Vibe Coding](https://aiweb3.school/zh/handbook/ai/vibe-coding/)
-- [ ] [MCP](https://aiweb3.school/zh/handbook/ai/mcp/)
+**AI 基础（选读薄弱章节）** ✅
+- [x] [LLM](https://aiweb3.school/zh/handbook/ai/llm/)
+- [x] [Prompt](https://aiweb3.school/zh/handbook/ai/prompt/)
+- [x] [Context](https://aiweb3.school/zh/handbook/ai/context/)
+- [x] [RAG](https://aiweb3.school/zh/handbook/ai/rag/)
+- [x] [Agent](https://aiweb3.school/zh/handbook/ai/agent/)
+- [x] [Frameworks](https://aiweb3.school/zh/handbook/ai/frameworks/)
+- [x] [Vibe Coding](https://aiweb3.school/zh/handbook/ai/vibe-coding/)
+- [x] [MCP](https://aiweb3.school/zh/handbook/ai/mcp/)
 - [ ] [Fine-tuning](https://aiweb3.school/zh/handbook/ai/fine-tuning/)
 - [ ] [Inference](https://aiweb3.school/zh/handbook/ai/inference/)
 - [ ] [Evaluation](https://aiweb3.school/zh/handbook/ai/evaluation/)
 
-**Web3 基础（选读薄弱章节）**
-- [ ] [Network](https://aiweb3.school/zh/handbook/web3/network/)
-- [ ] [Wallet](https://aiweb3.school/zh/handbook/web3/wallet/)
-- [ ] [Smart Contract](https://aiweb3.school/zh/handbook/web3/smart-contract/)
+**Web3 基础（选读薄弱章节）** 🟡
+- [x] [Network](https://aiweb3.school/zh/handbook/web3/network/)
+- [x] [Wallet](https://aiweb3.school/zh/handbook/web3/wallet/)
+- [x] [Smart Contract](https://aiweb3.school/zh/handbook/web3/smart-contract/)
 - [ ] [DeFi](https://aiweb3.school/zh/handbook/web3/defi/)
 - [ ] [Oracle](https://aiweb3.school/zh/handbook/web3/oracle/)
 - [ ] [Security](https://aiweb3.school/zh/handbook/web3/security/)
@@ -47,13 +56,13 @@
 - [ ] [Indexing](https://aiweb3.school/zh/handbook/web3/indexing/)
 - [ ] [Dev Stack](https://aiweb3.school/zh/handbook/web3/dev-stack/)
 
-### Phase 2：AI × Web3 Bridge 核心（Week 2）⭐
+### Phase 2：AI × Web3 Bridge 核心（Week 2）⭐ 🟡
 
 目标：这是产品研究的核心地带，重点深读每一章并做产品分析。
 
-- [ ] [Chain-aware Context](https://aiweb3.school/zh/handbook/bridge/chain-aware-context/)
-- [ ] [Web3 Tool Use](https://aiweb3.school/zh/handbook/bridge/web3-tool-use/)
-- [ ] [Agent Workflow](https://aiweb3.school/zh/handbook/bridge/agent-workflow/)
+- [x] [Chain-aware Context](https://aiweb3.school/zh/handbook/bridge/chain-aware-context/) — 笔记: experiments/chain-aware-context-notes.md
+- [x] [Web3 Tool Use](https://aiweb3.school/zh/handbook/bridge/web3-tool-use/) — 笔记: daily/2026-05-20.md
+- [x] [Agent Workflow](https://aiweb3.school/zh/handbook/bridge/agent-workflow/) — 笔记: experiments/agent-workflow-notes.md
 - [ ] [Agent Wallet](https://aiweb3.school/zh/handbook/bridge/agent-wallet/)
 - [ ] [Agent Identity](https://aiweb3.school/zh/handbook/bridge/agent-identity/)
 - [ ] [Agent Trust & Reputation](https://aiweb3.school/zh/handbook/bridge/agent-trust-and-reputation/)
@@ -67,7 +76,7 @@
 - [ ] [Decentralized AI](https://aiweb3.school/zh/handbook/bridge/decentralized-ai/)
 - [ ] [Governance AI](https://aiweb3.school/zh/handbook/bridge/governance-ai/)
 
-### Phase 3：前沿赛道探索（Week 3）
+### Phase 3：前沿赛道探索（Week 3）⬜
 
 目标：选择 2-3 个赛道深入研究，输出产品分析报告。
 
@@ -78,7 +87,7 @@
 - [ ] [Wallet Permission](https://aiweb3.school/zh/handbook/tracks/wallet-permission/) — 钱包权限
 - [ ] [Open Track](https://aiweb3.school/zh/handbook/tracks/open-track/) — 自由赛道
 
-### Phase 4：Hackathon 项目（Week 4）
+### Phase 4：Hackathon 项目（Week 4）⬜
 
 - [ ] 确定项目方向
 - [ ] 组队或 solo
@@ -87,7 +96,7 @@
 
 ## 里程碑
 
-- [ ] Week 1：完成基础回顾，熟悉生态
-- [ ] Week 2：完成 Bridge 核心章节，产出至少 3 篇产品分析笔记
+- [x] Week 1：完成基础回顾，熟悉生态 — AI 基础 ✅ / Web3 基础进行中
+- [ ] Week 2：完成 Bridge 核心章节，产出至少 3 篇产品分析笔记 — 3/15 已完成
 - [ ] Week 3：选定赛道，输出研究报告
 - [ ] Week 4：Hackathon 准备 / 项目实践
